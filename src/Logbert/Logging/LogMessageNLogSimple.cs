@@ -1,12 +1,12 @@
-﻿#region Copyright © 2015 Couchcoding
+﻿#region Copyright © 2021 alwinnat
 
-// File:    LogMessageLog4Net.cs
+// File:    LogMessageNLogSimple.cs
 // Package: Logbert
 // Project: Logbert
 // 
 // The MIT License (MIT)
 // 
-// Copyright (c) 2015 Couchcoding
+// Copyright (c) 2021 alwinnat
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,26 +32,29 @@ using Couchcoding.Logbert.Properties;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using System.Xml;
 
 using Couchcoding.Logbert.Helper;
 
 using MoonSharp.Interpreter;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Couchcoding.Logbert.Logging
 {
   /// <summary>
-  /// Implements a <see cref="LogMessage"/> class for Log4Net logger messages.
+  /// Implements a <see cref="LogMessage"/> class for NLog simple (plain text) logger messages.
   /// </summary>
-  public sealed partial class LogMessageLog4Net : LogMessage
+  public sealed class LogMessageNLogSimple : LogMessage
   {
     #region Private Fields
 
     /// <summary>
-    /// The necessary <see cref="XmlParserContext"/> to handle the log4j XML namespace within the log fragments.
+    /// Regular expression to parse an NLog text line in a specific format.
     /// </summary>
-    private static readonly XmlParserContext mParserContext;
+    private static readonly Regex mParserRegex = new Regex(
+          "(?<timestamp>[0-9]{4}\\-[0-1][0-9]\\-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]\\.[0-9]+) " +
+          "(?<level>[a-z]+) Thrd:(?<thread>[0-9]+) (?<logger>.*) -> (?<message>.*)",
+          RegexOptions.IgnoreCase);
 
     /// <summary>
     /// Holds the <see cref="DateTime"/> the <see cref="LogMessage"/> is received. 
@@ -61,7 +64,7 @@ namespace Couchcoding.Logbert.Logging
     /// <summary>
     /// Holds the message of the <see cref="LogMessage"/>.
     /// </summary>
-    private string mMessage;
+    private string mMessage = string.Empty;
 
     /// <summary>
     /// Holds the <see cref="LogLevel"/> of the <see cref="LogMessage"/>.
@@ -81,7 +84,7 @@ namespace Couchcoding.Logbert.Logging
     /// <summary>
     /// Holds a <see cref="Dictionary{V, T}"/> of custom properties.
     /// </summary>
-    private readonly Dictionary<string, string> mCustomProperties = new Dictionary<string,string>();
+    private readonly Dictionary<string, string> mCustomProperties = new Dictionary<string, string>();
 
     #endregion
 
@@ -166,80 +169,18 @@ namespace Couchcoding.Logbert.Logging
     {
       if (!string.IsNullOrEmpty(data))
       {
-        using (XmlReader reader = new XmlTextReader(data, XmlNodeType.Element, mParserContext))
+        var match = mParserRegex.Match(data);
+
+        if (match.Success)
         {
-          if ((reader.MoveToContent() != XmlNodeType.Element) || (reader.Name != "log4j:event"))
-          {
-            return false;
-          }
-
-          long timestamp;
-          mTimestamp = long.TryParse(reader.GetAttribute("timestamp"), out timestamp)
-            ? mUtcStartDate.AddMilliseconds(timestamp)
-            : DateTime.Now;
-
-          mLevel  = MapLevelType(reader.GetAttribute("level"));
-          mLogger = reader.GetAttribute("logger");
-          mThread = reader.GetAttribute("thread");
-
-          int eventDepth = reader.Depth;
-          reader.Read();
-
-          while (reader.Depth > eventDepth)
-          {
-            if (reader.MoveToContent() == XmlNodeType.Element)
-            {
-              switch (reader.Name)
-              {
-                case "log4j:message":
-                  mMessage = reader.ReadString();
-                  break;
-
-                case "log4j:throwable":
-                  mMessage += Environment.NewLine + reader.ReadString();
-                  break;
-
-                case "log4j:locationInfo":
-                  mLocation = new LocationInfo(
-                      reader.GetAttribute("file")   ?? string.Empty
-                    , reader.GetAttribute("class")  ?? string.Empty
-                    , reader.GetAttribute("method") ?? string.Empty);
-                  break;
-
-                case "log4j:properties":
-                  reader.Read();
-                  while (reader.MoveToContent() == XmlNodeType.Element && reader.Name == "log4j:data")
-                  {
-                    string name  = reader.GetAttribute("name");
-                    string value = reader.GetAttribute("value");
-
-                    if (name != null)
-                    {
-                      switch (name.ToLower())
-                      {
-                        case "exceptions":
-                          mCustomProperties["ExceptionString"] = value;
-                          break;
-                        default:
-                          mCustomProperties[name] = value;
-                          break;
-                      }
-                    }
-
-                    reader.Read();
-                  }
-
-                  break;
-              }
-            }
-
-            reader.Read();
-          }
-
+          mTimestamp = DateTime.Parse(match.Groups["timestamp"].Value);
+          mLevel = MapLevelType(match.Groups["level"].Value);
+          mLogger = match.Groups["logger"].Value.Replace("..", ".").Trim();
+          mThread = match.Groups["thread"].Value;
+          mMessage = match.Groups["message"].Value;
           return true;
         }
       }
-
       return false;
     }
 
@@ -322,9 +263,9 @@ namespace Couchcoding.Logbert.Logging
         return null;
       }
 
-      msgData["Thread"]   = Thread;
+      msgData["Thread"] = Thread;
       msgData["Location"] = Location.ToString();
-      
+
       Table customProperties = new Table(owner);
 
       foreach (KeyValuePair<string, string> customProperty in mCustomProperties)
@@ -337,42 +278,65 @@ namespace Couchcoding.Logbert.Logging
       return msgData;
     }
 
+    /// <summary>
+    /// Attach text to <see cref="Message"/> from a multiline NLog (for instance exceptions).
+    /// </summary>
+    /// <param name="message">Text to attach <see cref="Message"/>.</param>
+    public void AppendMessage(string message)
+    {
+      mMessage += message + Environment.NewLine;
+    }
+
+    /// <summary>
+    /// Try to parse a data string into a <see cref="LogMessageNLogSimple"/> object.
+    /// </summary>
+    /// <param name="data">The data string to parse.</param>
+    /// <param name="index">The index of the <see cref="LogMessage"/>.</param>
+    /// <param name="message">Parsed <see cref="LogMessageNLogSimple"/> object.</param>
+    /// <returns><c>True</c> on success, otherwise <c>false</c>.</returns>
+    public static bool TryParse(string data, int index, out LogMessageNLogSimple message)
+    {
+      if (!string.IsNullOrEmpty(data))
+      {
+        var match = mParserRegex.Match(data);
+
+        if (match.Success)
+        {
+          message = new LogMessageNLogSimple(index)
+          {
+            mTimestamp = DateTime.Parse(match.Groups["timestamp"].Value),
+            mLevel = MapLevelType(match.Groups["level"].Value),
+            mLogger = match.Groups["logger"].Value.Replace("..", ".").Trim(),
+            mThread = match.Groups["thread"].Value,
+            mMessage = match.Groups["message"].Value
+          };
+          return true;
+        }
+      }
+      message = null;
+      return false;
+    }
+
     #endregion
 
     #region Constructor
 
+    public LogMessageNLogSimple(int index) : base(null, index)
+    {
+
+    }
+
     /// <summary>
-    /// Creates a new instance of the <see cref="LogMessageLog4Net"/> object.
+    /// Creates a new instance of the <see cref="LogMessageNLogSimple"/> object.
     /// </summary>
-    /// <param name="rawData">The data <see cref="Array"/> the new <see cref="LogMessageLog4Net"/> represents.</param>
+    /// <param name="rawData">The data <see cref="Array"/> the new <see cref="LogMessageNLogSimple"/> represents.</param>
     /// <param name="index">The index of the <see cref="LogMessage"/>.</param>
-    public LogMessageLog4Net(string rawData, int index) : base(rawData, index)
+    public LogMessageNLogSimple(string rawData, int index) : base(rawData, index)
     {
       if (!ParseData(rawData))
       {
         throw new ApplicationException("Unable to parse the logger data.");
       }
-    }
-
-    /// <summary>
-    /// Static constructior to initialize the Log4J XML parser context.
-    /// </summary>
-    static LogMessageLog4Net()
-    {
-      XmlNamespaceManager namespaceManager = 
-        new XmlNamespaceManager(new NameTable());
-
-      namespaceManager.AddNamespace("nlog", "urn:ignore");
-
-      namespaceManager.AddNamespace(
-          "log4j"
-        , "http://jakarta.apache.org/log4j/");
-
-      mParserContext = new XmlParserContext(
-          null
-        , namespaceManager
-        , null
-        , XmlSpace.Default);
     }
 
     #endregion

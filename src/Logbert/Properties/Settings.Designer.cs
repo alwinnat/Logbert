@@ -12,7 +12,7 @@ namespace Couchcoding.Logbert.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.5.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -1352,7 +1352,7 @@ namespace Couchcoding.Logbert.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool FrmMainCheckForUpdateOnStartup {
             get {
                 return ((bool)(this["FrmMainCheckForUpdateOnStartup"]));
@@ -2205,6 +2205,162 @@ namespace Couchcoding.Logbert.Properties {
         public string Log4NetLevelFatal {
             get {
                 return ((string)(this["Log4NetLevelFatal"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1,1,1,1,1,1")]
+        public string ColumnVisibleNLogSimpleFileReceiver {
+            get {
+                return ((string)(this["ColumnVisibleNLogSimpleFileReceiver"]));
+            }
+            set {
+                this["ColumnVisibleNLogSimpleFileReceiver"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100,100,100,100,100,1024")]
+        public string ColumnWidthNLogSimpleFileReceiver {
+            get {
+                return ((string)(this["ColumnWidthNLogSimpleFileReceiver"]));
+            }
+            set {
+                this["ColumnWidthNLogSimpleFileReceiver"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DockLayoutNLogSimpleFileReceiver {
+            get {
+                return ((string)(this["DockLayoutNLogSimpleFileReceiver"]));
+            }
+            set {
+                this["DockLayoutNLogSimpleFileReceiver"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1252")]
+        public int PnlNLogSimpleFileSettingsEncoding {
+            get {
+                return ((int)(this["PnlNLogSimpleFileSettingsEncoding"]));
+            }
+            set {
+                this["PnlNLogSimpleFileSettingsEncoding"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PnlNLogSimpleFileSettingsFile {
+            get {
+                return ((string)(this["PnlNLogSimpleFileSettingsFile"]));
+            }
+            set {
+                this["PnlNLogSimpleFileSettingsFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PnlNLogSimpleFileSettingsStartFromBeginning {
+            get {
+                return ((bool)(this["PnlNLogSimpleFileSettingsStartFromBeginning"]));
+            }
+            set {
+                this["PnlNLogSimpleFileSettingsStartFromBeginning"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PnlNLogSimpleDirectorySettingsDirectory {
+            get {
+                return ((string)(this["PnlNLogSimpleDirectorySettingsDirectory"]));
+            }
+            set {
+                this["PnlNLogSimpleDirectorySettingsDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(".*\\.log[\\.]?[\\d]?")]
+        public string PnlNLogSimpleDirectorySettingsPattern {
+            get {
+                return ((string)(this["PnlNLogSimpleDirectorySettingsPattern"]));
+            }
+            set {
+                this["PnlNLogSimpleDirectorySettingsPattern"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PnlNLogSimpleDirectorySettingsReadAllExisting {
+            get {
+                return ((bool)(this["PnlNLogSimpleDirectorySettingsReadAllExisting"]));
+            }
+            set {
+                this["PnlNLogSimpleDirectorySettingsReadAllExisting"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1252")]
+        public int PnlNLogSimpleDirectorySettingsEncoding {
+            get {
+                return ((int)(this["PnlNLogSimpleDirectorySettingsEncoding"]));
+            }
+            set {
+                this["PnlNLogSimpleDirectorySettingsEncoding"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1,1,1,1,1,1")]
+        public string ColumnVisibleNLogSimpleDirReceiver {
+            get {
+                return ((string)(this["ColumnVisibleNLogSimpleDirReceiver"]));
+            }
+            set {
+                this["ColumnVisibleNLogSimpleDirReceiver"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100,100,100,100,100,1024")]
+        public string ColumnWidthNLogSimpleDirReceiver {
+            get {
+                return ((string)(this["ColumnWidthNLogSimpleDirReceiver"]));
+            }
+            set {
+                this["ColumnWidthNLogSimpleDirReceiver"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DockLayoutNLogSimpleDirReceiver {
+            get {
+                return ((string)(this["DockLayoutNLogSimpleDirReceiver"]));
+            }
+            set {
+                this["DockLayoutNLogSimpleDirReceiver"] = value;
             }
         }
     }

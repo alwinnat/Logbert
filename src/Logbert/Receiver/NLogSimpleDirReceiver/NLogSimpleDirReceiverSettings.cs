@@ -1,12 +1,12 @@
-﻿#region Copyright © 2017 Couchcoding
+﻿#region Copyright © 2021 alwinnat
 
-// File:    NLogDirReceiverSettings.cs
+// File:    NLogSimpleDirReceiverSettings.cs
 // Package: Logbert
 // Project: Logbert
 // 
 // The MIT License (MIT)
 // 
-// Copyright (c) 2017 Couchcoding
+// Copyright (c) 2021 alwinat
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,12 +39,12 @@ using System.Text;
 
 using Couchcoding.Logbert.Helper;
 
-namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
+namespace Couchcoding.Logbert.Receiver.NLogSimpleDirReceiver
 {
   /// <summary>
   /// Implements the <see cref="ILogSettingsCtrl"/> control for the NLog file receiver.
   /// </summary>
-  public partial class NLogDirReceiverSettings : UserControl, ILogSettingsCtrl
+  public partial class NLogSimpleDirReceiverSettings : UserControl, ILogSettingsCtrl
   {
     #region Private Methods
 
@@ -113,13 +113,13 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
 
       if (ModifierKeys != Keys.Shift)
       {
-        if (Directory.Exists(Settings.Default.PnlNLogDirectorySettingsDirectory))
+        if (Directory.Exists(Settings.Default.PnlNLogSimpleDirectorySettingsDirectory))
         {
-          txtLogDirectory.Text = Settings.Default.PnlNLogDirectorySettingsDirectory;
+          txtLogDirectory.Text = Settings.Default.PnlNLogSimpleDirectorySettingsDirectory;
         }
 
-        txtLogFilePattern.Text    = Settings.Default.PnlNLogDirectorySettingsPattern ;
-        chkInitialReadAll.Checked = Settings.Default.PnlNLogDirectorySettingsReadAllExisting;
+        txtLogFilePattern.Text    = Settings.Default.PnlNLogSimpleDirectorySettingsPattern;
+        chkInitialReadAll.Checked = Settings.Default.PnlNLogSimpleDirectorySettingsReadAllExisting;
       }
 
       foreach (EncodingInfo encoding in Encoding.GetEncodings())
@@ -128,7 +128,7 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
 
         cmbEncoding.Items.Add(encWrapper);
 
-        if (encoding.CodePage == (ModifierKeys != Keys.Shift ? Settings.Default.PnlNLogDirectorySettingsEncoding : Encoding.Default.CodePage))
+        if (encoding.CodePage == (ModifierKeys != Keys.Shift ? Settings.Default.PnlNLogSimpleDirectorySettingsEncoding : Encoding.Default.CodePage))
         {
           cmbEncoding.SelectedItem = encWrapper;
         }
@@ -178,19 +178,19 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
       if (ModifierKeys != Keys.Shift)
       {
         // Save the current settings as new default values.
-        Settings.Default.PnlNLogDirectorySettingsDirectory       = txtLogDirectory.Text;
-        Settings.Default.PnlNLogDirectorySettingsPattern         = txtLogFilePattern.Text;
-        Settings.Default.PnlNLogDirectorySettingsReadAllExisting = chkInitialReadAll.Checked;
-        Settings.Default.PnlNLogDirectorySettingsEncoding        = ((EncodingWrapper)cmbEncoding.SelectedItem).Codepage;
+        Settings.Default.PnlNLogSimpleDirectorySettingsDirectory       = txtLogDirectory.Text;
+        Settings.Default.PnlNLogSimpleDirectorySettingsPattern         = txtLogFilePattern.Text;
+        Settings.Default.PnlNLogSimpleDirectorySettingsReadAllExisting = chkInitialReadAll.Checked;
+        Settings.Default.PnlNLogSimpleDirectorySettingsEncoding        = ((EncodingWrapper)cmbEncoding.SelectedItem).Codepage;
 
         Settings.Default.SaveSettings();
       }
 
-      return new NLogDirReceiver(
+      return new NLogSimpleDirReceiver(
           txtLogDirectory.Text
         , txtLogFilePattern.Text
         , chkInitialReadAll.Checked
-        , Settings.Default.PnlNLogDirectorySettingsEncoding);
+        , Settings.Default.PnlNLogSimpleDirectorySettingsEncoding);
     }
 
     #endregion
@@ -198,9 +198,9 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
     #region Constructor
 
     /// <summary>
-    /// Creates a new instance of the <see cref="NLogDirReceiverSettings"/> <see cref="Control"/>.
+    /// Creates a new instance of the <see cref="NLogSimpleDirReceiverSettings"/> <see cref="Control"/>.
     /// </summary>
-    public NLogDirReceiverSettings()
+    public NLogSimpleDirReceiverSettings()
     {
       InitializeComponent();
     }

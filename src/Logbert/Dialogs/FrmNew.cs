@@ -41,11 +41,13 @@ using Couchcoding.Logbert.Receiver.Log4NetFileReceiver;
 using Couchcoding.Logbert.Receiver.NlogTcpReceiver;
 using Couchcoding.Logbert.Receiver.NLogUdpReceiver;
 using Couchcoding.Logbert.Receiver.NLogFileReceiver;
+using Couchcoding.Logbert.Receiver.NLogSimpleFileReceiver;
 using Couchcoding.Logbert.Receiver.SyslogFileReceiver;
 using Couchcoding.Logbert.Receiver.SyslogUdpReceiver;
 using Couchcoding.Logbert.Receiver.EventlogReceiver;
 using Couchcoding.Logbert.Receiver.Log4NetDirReceiver;
 using Couchcoding.Logbert.Receiver.NLogDirReceiver;
+using Couchcoding.Logbert.Receiver.NLogSimpleDirReceiver;
 using Couchcoding.Logbert.Receiver.WinDebugReceiver;
 using Couchcoding.Logbert.Receiver.CustomReceiver.CustomUdpReceiver;
 
@@ -130,7 +132,9 @@ namespace Couchcoding.Logbert.Dialogs
       lstLogger.Items.Add(new NlogTcpReceiver());
       lstLogger.Items.Add(new NLogUdpReceiver());
       lstLogger.Items.Add(new NLogFileReceiver());
+      lstLogger.Items.Add(new NLogSimpleFileReceiver());
       lstLogger.Items.Add(new NLogDirReceiver());
+      lstLogger.Items.Add(new NLogSimpleDirReceiver());
       lstLogger.AddSeperator();
       lstLogger.Items.Add(new SyslogUdpReceiver());
       lstLogger.Items.Add(new SyslogFileReceiver());

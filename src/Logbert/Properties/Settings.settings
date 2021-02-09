@@ -336,7 +336,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="FrmMainCheckForUpdateOnStartup" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="SettingsUpgradeRequired" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -553,6 +553,45 @@
     </Setting>
     <Setting Name="Log4NetLevelFatal" Type="System.String" Scope="Application">
       <Value Profile="(Default)">FATAL</Value>
+    </Setting>
+    <Setting Name="ColumnVisibleNLogSimpleFileReceiver" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1,1,1,1,1,1</Value>
+    </Setting>
+    <Setting Name="ColumnWidthNLogSimpleFileReceiver" Type="System.String" Scope="User">
+      <Value Profile="(Default)">100,100,100,100,100,1024</Value>
+    </Setting>
+    <Setting Name="DockLayoutNLogSimpleFileReceiver" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="PnlNLogSimpleFileSettingsEncoding" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1252</Value>
+    </Setting>
+    <Setting Name="PnlNLogSimpleFileSettingsFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="PnlNLogSimpleFileSettingsStartFromBeginning" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="PnlNLogSimpleDirectorySettingsDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="PnlNLogSimpleDirectorySettingsPattern" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.*\.log[\.]?[\d]?</Value>
+    </Setting>
+    <Setting Name="PnlNLogSimpleDirectorySettingsReadAllExisting" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="PnlNLogSimpleDirectorySettingsEncoding" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1252</Value>
+    </Setting>
+    <Setting Name="ColumnVisibleNLogSimpleDirReceiver" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1,1,1,1,1,1</Value>
+    </Setting>
+    <Setting Name="ColumnWidthNLogSimpleDirReceiver" Type="System.String" Scope="User">
+      <Value Profile="(Default)">100,100,100,100,100,1024</Value>
+    </Setting>
+    <Setting Name="DockLayoutNLogSimpleDirReceiver" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

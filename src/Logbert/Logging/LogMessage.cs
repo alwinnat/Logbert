@@ -29,6 +29,7 @@
 #endregion
 
 using System;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 using Couchcoding.Logbert.Helper;
@@ -223,6 +224,45 @@ namespace Couchcoding.Logbert.Logging
         , Logger.ToCsv()
         , Message.ToCsv()
         , Environment.NewLine);
+    }
+
+    /// <summary>
+    /// Mappes the given <paramref name="levelType"/> to the internal <see cref="LogLevel"/>.
+    /// </summary>
+    /// <param name="levelType">The string to map to the internal <see cref="Enum"/>.</param>
+    /// <returns>The mapped <see cref="LogLevel"/>.</returns>
+    public static LogLevel MapLevelType(string levelType)
+    {
+      if (!string.IsNullOrEmpty(levelType))
+      {
+        if (Regex.IsMatch(levelType, Settings.Default.Log4NetLevelDebug, RegexOptions.IgnoreCase))
+        {
+          return LogLevel.Debug;
+        }
+
+        if (Regex.IsMatch(levelType, Settings.Default.Log4NetLevelInfo, RegexOptions.IgnoreCase))
+        {
+          return LogLevel.Info;
+        }
+
+        if (Regex.IsMatch(levelType, Settings.Default.Log4NetLeveLWarning, RegexOptions.IgnoreCase))
+        {
+          return LogLevel.Warning;
+        }
+
+        if (Regex.IsMatch(levelType, Settings.Default.Log4NetLevelError, RegexOptions.IgnoreCase))
+        {
+          return LogLevel.Error;
+        }
+
+        if (Regex.IsMatch(levelType, Settings.Default.Log4NetLevelFatal, RegexOptions.IgnoreCase))
+        {
+          return LogLevel.Fatal;
+        }
+      }
+
+      // The lowest one is the default one.
+      return LogLevel.Trace;
     }
 
     #endregion

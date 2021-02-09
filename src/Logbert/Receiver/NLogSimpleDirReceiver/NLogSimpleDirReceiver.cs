@@ -1,12 +1,12 @@
-﻿#region Copyright © 2017 Couchcoding
+﻿#region Copyright © 2021 alwinnat
 
-// File:    NLogDirReceiver.cs
+// File:    NLogSimpleDirReceiver.cs
 // Package: Logbert
 // Project: Logbert
 // 
 // The MIT License (MIT)
 // 
-// Copyright (c) 2017 Couchcoding
+// Copyright (c) 2021 alwinat
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -38,22 +38,13 @@ using Couchcoding.Logbert.Controls;
 using Couchcoding.Logbert.Helper;
 using Couchcoding.Logbert.Logging;
 
-namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
+namespace Couchcoding.Logbert.Receiver.NLogSimpleDirReceiver
 {
   /// <summary>
   /// Implements a <see cref="ILogProvider"/> for the NLog file service.
   /// </summary>
-  public class NLogDirReceiver : ReceiverBase
+  public class NLogSimpleDirReceiver : ReceiverBase
   {
-    #region Private Consts
-
-    /// <summary>
-    /// Defines the end tag of a NLog message.
-    /// </summary>
-    private const string NLOG_LOGMSG_END = "</log4j:event>";
-
-    #endregion
-
     #region Private Classes
 
     /// <summary>
@@ -122,7 +113,7 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
     /// <summary>
     /// Gets the name of the <see cref="ILogProvider"/>.
     /// </summary>
-    public override string Name => "NLog Dir Receiver";
+    public override string Name => "NLog Simple Dir Receiver";
 
     /// <summary>
     /// Gets the description of the <see cref="ILogProvider"/>
@@ -142,7 +133,7 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
     /// <summary>
     /// Gets the settings <see cref="Control"/> of the <see cref="ILogProvider"/>.
     /// </summary>
-    public override ILogSettingsCtrl Settings => new NLogDirReceiverSettings();
+    public override ILogSettingsCtrl Settings => new NLogSimpleDirReceiverSettings();
 
     /// <summary>
     /// Gets the columns to display of the <see cref="ILogProvider"/>.
@@ -151,8 +142,8 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
     {
       get
       {
-        string[] visibleVal = Properties.Settings.Default.ColumnVisibleNLogDirReceiver.Split(',');
-        string[] widthVal   = Properties.Settings.Default.ColumnWidthNLogDirReceiver.Split(',');
+        string[] visibleVal = Properties.Settings.Default.ColumnVisibleNLogSimpleDirReceiver.Split(',');
+        string[] widthVal = Properties.Settings.Default.ColumnWidthNLogSimpleDirReceiver.Split(',');
 
         return new Dictionary<int, LogColumnData>
         {
@@ -164,7 +155,7 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
           { 5, new LogColumnData("Message",   visibleVal[5] == "1", int.Parse(widthVal[5])) }
         };
       }
-    } 
+    }
 
     /// <summary>
     /// Gets or sets the active state if the <see cref="ILogProvider"/>.
@@ -227,7 +218,7 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
         mFileWatcher.EnableRaisingEvents = false;
         mFileWatcher.Changed -= OnLogFileChanged;
         mFileWatcher.Created -= OnLogFileChanged;
-        mFileWatcher.Error   -= OnFileWatcherError;
+        mFileWatcher.Error -= OnFileWatcherError;
 
         mFileWatcher.Dispose();
       }
@@ -250,51 +241,36 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
         // the current log file was re-created. Observe from beginning on.
         mLastFileOffset = 0;
       }
-
-      mFileReader.BaseStream.Seek(
-          mLastFileOffset
-        , SeekOrigin.Begin);
+      mFileReader.BaseStream.Seek(mLastFileOffset, SeekOrigin.Begin);
 
       string line;
-      string dataToParse = string.Empty;
+      LogMessageNLogSimple newLogMsg = null;
 
       FixedSizedQueue<LogMessage> messages = new FixedSizedQueue<LogMessage>(
         Properties.Settings.Default.MaxLogMessages);
 
       while ((line = mFileReader.ReadLine()) != null)
       {
-        dataToParse += line;
-
-        int nLogEndTag = dataToParse.IndexOf(
-            NLOG_LOGMSG_END
-          , StringComparison.Ordinal);
-
-        if (nLogEndTag > 0)
+        try
         {
-          LogMessage newLogMsg;
-
-          try
+          if (LogMessageNLogSimple.TryParse(line, mLogNumber, out LogMessageNLogSimple message))
           {
-            newLogMsg = new LogMessageLog4Net(
-                dataToParse
-              , ++mLogNumber);
+            newLogMsg = message;
+            messages.Enqueue(newLogMsg);
+            ++mLogNumber;
           }
-          catch (Exception ex)
+          else
           {
-            Logger.Warn(ex.Message);
-            continue;
+            newLogMsg?.AppendMessage(line);
           }
-
-          messages.Enqueue(newLogMsg);
-
-          dataToParse = dataToParse.Substring(
-              nLogEndTag
-            , dataToParse.Length - (nLogEndTag + NLOG_LOGMSG_END.Length));
+        }
+        catch (Exception ex)
+        {
+          Logger.Warn(ex.Message);
+          continue;
         }
       }
-
       mLastFileOffset = mFileReader.BaseStream.Position;
-
       mLogHandler?.HandleMessage(messages.ToArray());
     }
 
@@ -319,8 +295,8 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
     {
       base.Initialize(logHandler);
 
-      Regex filePattern           = new Regex(mFilenamePattern);
-      DirectoryInfo dirInfo       = new DirectoryInfo(mDirectoryToObserve);
+      Regex filePattern = new Regex(mFilenamePattern);
+      DirectoryInfo dirInfo = new DirectoryInfo(mDirectoryToObserve);
       List<string> collectedFiles = new List<string>();
 
       foreach (FileInfo fInfo in dirInfo.GetFiles())
@@ -334,7 +310,7 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
       // Ensure the list of files is natural sorted.
       collectedFiles.Sort(new NaturalStringComparer());
 
-      mLogNumber = 0;
+      mLogNumber = 1;
 
       if (mStartFromBeginning)
       {
@@ -375,9 +351,9 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
       mFileWatcher = new FileSystemWatcher(mDirectoryToObserve);
 
       mFileWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.FileName;
-      mFileWatcher.Changed     += OnLogFileChanged;
-      mFileWatcher.Created     += OnLogFileChanged;
-      mFileWatcher.Error       += OnFileWatcherError;
+      mFileWatcher.Changed += OnLogFileChanged;
+      mFileWatcher.Created += OnLogFileChanged;
+      mFileWatcher.Error += OnFileWatcherError;
 
       mFileWatcher.EnableRaisingEvents = IsActive;
     }
@@ -387,7 +363,7 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
     /// </summary>
     public override void Clear()
     {
-      mLogNumber = 0;
+      mLogNumber = 1;
     }
 
     /// <summary>
@@ -409,9 +385,9 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
       if (mFileWatcher != null)
       {
         mFileWatcher.EnableRaisingEvents = false;
-        mFileWatcher.Changed            -= OnLogFileChanged;
-        mFileWatcher.Created            -= OnLogFileChanged;
-        mFileWatcher.Error              -= OnFileWatcherError;
+        mFileWatcher.Changed -= OnLogFileChanged;
+        mFileWatcher.Created -= OnLogFileChanged;
+        mFileWatcher.Error -= OnFileWatcherError;
         mFileWatcher.Dispose();
       }
 
@@ -455,9 +431,9 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
     /// <param name="columnLayout">The current column layout to save.</param>
     public override void SaveLayout(string layout, List<LogColumnData> columnLayout)
     {
-      Properties.Settings.Default.DockLayoutNLogDirReceiver = layout ?? string.Empty;
+      Properties.Settings.Default.DockLayoutNLogSimpleDirReceiver = layout ?? string.Empty;
 
-      Properties.Settings.Default.ColumnVisibleNLogDirReceiver = string.Format(
+      Properties.Settings.Default.ColumnVisibleNLogSimpleDirReceiver = string.Format(
           "{0},{1},{2},{3},{4},{5}"
         , columnLayout[0].Visible ? 1 : 0
         , columnLayout[1].Visible ? 1 : 0
@@ -466,7 +442,7 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
         , columnLayout[4].Visible ? 1 : 0
         , columnLayout[5].Visible ? 1 : 0);
 
-      Properties.Settings.Default.ColumnWidthNLogDirReceiver = string.Format(
+      Properties.Settings.Default.ColumnWidthNLogSimpleDirReceiver = string.Format(
           "{0},{1},{2},{3},{4},{5}"
         , columnLayout[0].Width
         , columnLayout[1].Width
@@ -484,7 +460,7 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
     /// <returns>The restored layout, or <c>null</c> if none exists.</returns>
     public override string LoadLayout()
     {
-      return Properties.Settings.Default.DockLayoutNLogDirReceiver;
+      return Properties.Settings.Default.DockLayoutNLogSimpleDirReceiver;
     }
 
     #endregion
@@ -492,24 +468,24 @@ namespace Couchcoding.Logbert.Receiver.NLogDirReceiver
     #region Constructor
 
     /// <summary>
-    /// Creates a new and empty instance of the <see cref="NLogDirReceiver"/> class.
+    /// Creates a new and empty instance of the <see cref="NLogSimpleDirReceiver"/> class.
     /// </summary>
-    public NLogDirReceiver()
+    public NLogSimpleDirReceiver()
     {
 
     }
 
     /// <summary>
-    /// Creates a new and configured instance of the <see cref="NLogDirReceiver"/> class.
+    /// Creates a new and configured instance of the <see cref="NLogSimpleDirReceiver"/> class.
     /// </summary>
-    /// <param name="directoryToObserve">The directory the new <see cref="NLogDirReceiver"/> instance should observe.</param>
+    /// <param name="directoryToObserve">The directory the new <see cref="NLogSimpleDirReceiver"/> instance should observe.</param>
     /// <param name="filenamePattern">The <see cref="Regex"/> to find the files to load and observe.</param>
-    /// <param name="startFromBeginning">Determines whether the new <see cref="NLogDirReceiver"/> should read all files within the given <paramref name="directoryToObserve"/>, or not.</param>
+    /// <param name="startFromBeginning">Determines whether the new <see cref="NLogSimpleDirReceiver"/> should read all files within the given <paramref name="directoryToObserve"/>, or not.</param>
     /// <param name="codePage">The codepage to use for encoding of the data to parse.</param>
-    public NLogDirReceiver(string directoryToObserve, string filenamePattern, bool startFromBeginning, int codePage) : base (codePage)
+    public NLogSimpleDirReceiver(string directoryToObserve, string filenamePattern, bool startFromBeginning, int codePage) : base(codePage)
     {
       mDirectoryToObserve = directoryToObserve;
-      mFilenamePattern    = filenamePattern;
+      mFilenamePattern = filenamePattern;
       mStartFromBeginning = startFromBeginning;
     }
 

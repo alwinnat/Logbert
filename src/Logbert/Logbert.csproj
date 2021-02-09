@@ -330,10 +330,12 @@
     <Compile Include="Logging\Filter\LogFilterColumn.cs" />
     <Compile Include="Logging\Filter\LogFilterLevel.cs" />
     <Compile Include="Logging\Filter\LogFilterLogger.cs" />
+    <Compile Include="Logging\LocationInfo.cs" />
     <Compile Include="Logging\LogLevel.cs" />
     <Compile Include="Logging\LogMessageCustom.cs" />
     <Compile Include="Logging\LogMessageEventlog.cs" />
     <Compile Include="Logging\LogMessageLog4Net.cs" />
+    <Compile Include="Logging\LogMessageNLogSimple.cs" />
     <Compile Include="Logging\LogMessageSyslog.cs" />
     <Compile Include="Logging\LogMessageWinDebug.cs" />
     <Compile Include="MainForm.cs">
@@ -401,6 +403,7 @@
     <Compile Include="Receiver\Log4NetDirReceiver\Log4NetDirReceiverSettings.Designer.cs">
       <DependentUpon>Log4NetDirReceiverSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Receiver\NLogSimpleDirReceiver\NLogSimpleDirReceiver.cs" />
     <Compile Include="Receiver\NLogFileReceiver\NLogFileReceiver.cs" />
     <Compile Include="Receiver\NLogFileReceiver\NLogFileReceiverSettings.cs">
       <SubType>UserControl</SubType>
@@ -408,6 +411,19 @@
     <Compile Include="Receiver\NLogFileReceiver\NLogFileReceiverSettings.Designer.cs">
       <DependentUpon>NLogFileReceiverSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Receiver\NLogSimpleDirReceiver\NLogSimpleDirReceiverSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Receiver\NLogSimpleDirReceiver\NLogSimpleDirReceiverSettings.Designer.cs">
+      <DependentUpon>NLogSimpleDirReceiverSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Receiver\NLogSimpleFileReceiver\NLogSimpleFileReceiverSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Receiver\NLogSimpleFileReceiver\NLogSimpleFileReceiverSettings.Designer.cs">
+      <DependentUpon>NLogSimpleFileReceiverSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Receiver\NLogSimpleFileReceiver\NLogSimpleFileReceiver.cs" />
     <Compile Include="Receiver\NLogUdpReceiver\NLogUdpReceiver.cs" />
     <Compile Include="Receiver\NLogUdpReceiver\NLogUdpReceiverSettings.cs">
       <SubType>UserControl</SubType>
@@ -581,6 +597,12 @@
     <EmbeddedResource Include="Receiver\NLogFileReceiver\NLogFileReceiverSettings.resx">
       <DependentUpon>NLogFileReceiverSettings.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Receiver\NLogSimpleDirReceiver\NLogSimpleDirReceiverSettings.resx">
+      <DependentUpon>NLogSimpleDirReceiverSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Receiver\NLogSimpleFileReceiver\NLogSimpleFileReceiverSettings.resx">
+      <DependentUpon>NLogSimpleFileReceiverSettings.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Receiver\NLogUdpReceiver\NLogUdpReceiverSettings.resx">
       <DependentUpon>NLogUdpReceiverSettings.cs</DependentUpon>
     </EmbeddedResource>
@@ -666,6 +688,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -38,11 +38,12 @@ using Couchcoding.Logbert.Dialogs;
 using Couchcoding.Logbert.Dialogs.Docking;
 using Couchcoding.Logbert.Helper;
 using Couchcoding.Logbert.Properties;
+using Couchcoding.Logbert.Receiver.SyslogFileReceiver;
 using Couchcoding.Logbert.Receiver.Log4NetFileReceiver;
+using Couchcoding.Logbert.Receiver.NLogSimpleFileReceiver;
 
 using WeifenLuo.WinFormsUI.Docking;
 using Couchcoding.Logbert.Interfaces;
-using Couchcoding.Logbert.Receiver.SyslogFileReceiver;
 using System.IO;
 using System.IO.Pipes;
 using System.Text;
@@ -52,7 +53,6 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Reflection;
 using Couchcoding.Logbert.Gui.Helper;
-using Couchcoding.Logbert.Theme.Palettes;
 using Couchcoding.Logbert.Theme.Interfaces;
 using Couchcoding.Logbert.Theme;
 using Couchcoding.Logbert.Theme.Themes;
@@ -445,6 +445,7 @@ namespace Logbert
         {
             new Log4NetFileReceiver(logFileToLoad, true, Settings.Default.PnlLog4NetFileSettingsEncoding)
           , new SyslogFileReceiver (logFileToLoad, true, Settings.Default.PnlSyslogFileSettingsTimestampFormat, Settings.Default.PnlSyslogFileSettingsEncoding)
+          , new NLogSimpleFileReceiver(logFileToLoad, true, Settings.Default.PnlNLogSimpleFileSettingsEncoding)
         };
 
         foreach (ReceiverBase receiver in knownFileReceiver)
