@@ -66,17 +66,17 @@ namespace Logbert
     /// <summary>
     /// Defines the URL to the logbert homepage.
     /// </summary>
-    private const string LOGBERT_HOMEPAGE_URI = @"https://github.com/couchcoding/Logbert/";
+    private const string LOGBERT_HOMEPAGE_URI = @"https://github.com/alwinnat/Logbert";
 
     /// <summary>
     /// Defines the URL to check for the newest version of Logbert.
     /// </summary>
-    private const string LOGBERT_UPDATE_API = @"https://api.github.com/repos/couchcoding/Logbert/releases/latest";
+    private const string LOGBERT_UPDATE_API = @"https://api.github.com/repos/alwinnat/Logbert/releases/latest";
 
     /// <summary>
     /// Defines the URL the user may download the newest version of Logbert.
     /// </summary>
-    private const string LOGBERT_LATEST_URI = @"https://github.com/couchcoding/Logbert/releases/latest";
+    private const string LOGBERT_LATEST_URI = @"https://github.com/alwinnat/Logbert/releases/latest";
 
     /// <summary>
     /// Defines the default timeout for update check reqeusts.

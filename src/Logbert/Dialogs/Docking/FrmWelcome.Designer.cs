@@ -124,9 +124,9 @@
             this.lnkLogbertHomepage.Size = new System.Drawing.Size(98, 33);
             this.lnkLogbertHomepage.TabIndex = 0;
             this.lnkLogbertHomepage.TabStop = true;
-            this.lnkLogbertHomepage.Tag = "https://github.com/couchcoding/Logbert";
+            this.lnkLogbertHomepage.Tag = "https://github.com/alwinnat/Logbert";
             this.lnkLogbertHomepage.Text = "Logbert Homepage";
-            this.tlTip.SetToolTip(this.lnkLogbertHomepage, "https://github.com/couchcoding/Logbert");
+            this.tlTip.SetToolTip(this.lnkLogbertHomepage, "https://github.com/alwinnat/Logbert");
             this.lnkLogbertHomepage.VisitedLinkColor = System.Drawing.SystemColors.ControlText;
             this.lnkLogbertHomepage.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelClicked);
             // 

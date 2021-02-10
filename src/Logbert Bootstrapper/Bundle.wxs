@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:bal="http://schemas.microsoft.com/wix/BalExtension">
+  <Bundle Name="Logbert Version 1.6.2.1" Version="1.6.2.1" Manufacturer="alwinnat" UpgradeCode="9d8f12f2-69c4-4a2a-9965-04d0919527ec">
+    <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense">
+      <bal:WixStandardBootstrapperApplication LicenseFile="License.rtf" 
+                                              LogoFile="Logo.png" />
+    </BootstrapperApplicationRef>
+    <Chain>
+      <MsiPackage SourceFile="..\Logbert Setup\bin\Release\en-US\Logbert Setup.msi" />
+    </Chain>
+  </Bundle>
+</Wix>
